@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import ReactMarkdown from "react-markdown";
 
 type Msg = { role: "user" | "assistant"; content: string };
 
@@ -13,8 +14,8 @@ export default function ChatPage() {
     },
   ]);
   const [input, setInput] = useState("");
-  const listRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(false);
+  const listRef = useRef<HTMLDivElement>(null);
 
   // Auto-scroll when messages update
   useEffect(() => {
@@ -24,7 +25,7 @@ export default function ChatPage() {
     });
   }, [messages]);
 
-  // Send message to backend API
+  // Send message to API
   const sendMessage = async () => {
     const text = input.trim();
     if (!text || loading) return;
@@ -41,12 +42,12 @@ export default function ChatPage() {
         body: JSON.stringify({ messages: newMessages }),
       });
 
-      if (!res.ok) throw new Error("Failed to get response from API.");
+      if (!res.ok) throw new Error("Failed to get response from API");
 
       const data = await res.json();
       const reply = data.content || "No response received.";
       setMessages((prev) => [...prev, { role: "assistant", content: reply }]);
-    } catch (err: any) {
+    } catch (err) {
       console.error(err);
       setMessages((prev) => [
         ...prev,
@@ -57,7 +58,7 @@ export default function ChatPage() {
     }
   };
 
-  // Send on Enter
+  // Press Enter to send
   const onKey = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
@@ -76,10 +77,10 @@ export default function ChatPage() {
           ← Back to CS 141
         </a>
         <h1 className="text-2xl font-bold">Ask AI</h1>
-        <div className="w-24" />
+        <div className="w-24" /> {/* Spacer */}
       </header>
 
-      {/* Full-width Chat */}
+      {/* Chat Window */}
       <main className="flex-1 flex flex-col px-6 py-4 overflow-hidden">
         <div ref={listRef} className="flex-1 overflow-y-auto px-6 space-y-6">
           {messages.map((m, i) => (
@@ -96,7 +97,36 @@ export default function ChatPage() {
                     : "bg-gray-100 text-black rounded-bl-none"
                 }`}
               >
-                {m.content}
+                {/* Markdown Renderer */}
+                <div className="prose prose-sm max-w-none">
+                  <ReactMarkdown
+                    components={{
+                      code({ children }) {
+                        return (
+                          <code className="bg-gray-200 px-1 py-0.5 rounded text-sm font-mono">
+                            {children}
+                          </code>
+                        );
+                      },
+                      pre({ children }) {
+                        return (
+                          <pre className="bg-gray-100 rounded-lg p-3 overflow-x-auto text-sm font-mono border border-gray-200">
+                            {children}
+                          </pre>
+                        );
+                      },
+                      ul({ children }) {
+                        return (
+                          <ul className="list-disc list-inside ml-4 text-gray-800">
+                            {children}
+                          </ul>
+                        );
+                      },
+                    }}
+                  >
+                    {m.content}
+                  </ReactMarkdown>
+                </div>
               </div>
             </div>
           ))}
