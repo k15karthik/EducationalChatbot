@@ -11,7 +11,7 @@ const openai = new OpenAI({
 
 export async function POST(req: Request) {
   try {
-    const { question, studentAnswer } = await req.json();
+    const { question, expectedAnswer, studentAnswer } = await req.json();
 
     const prompt = `
 You are a kind, encouraging C++ tutor who gives feedback like a real teacher.
@@ -34,6 +34,7 @@ Rules:
 }
 
 Question: "${question}"
+Expected Answer: "${expectedAnswer}"
 Student Answer: "${studentAnswer}"
 `;
 

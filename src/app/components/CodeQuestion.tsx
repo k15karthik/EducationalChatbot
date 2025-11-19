@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Editor from "@monaco-editor/react";
 import axios from "axios";
 
@@ -43,6 +43,14 @@ int main() {
   const [allPassed, setAllPassed] = useState<boolean | null>(null);
   const [aiHint, setAiHint] = useState<string | null>(null);
 
+  // Reset everything when the question changes
+  useEffect(() => {
+    setCode(starter || getStarterTemplate(question));
+    setResults([]);
+    setAllPassed(null);
+    setAiHint(null);
+  }, [starter, question]);
+
   const handleRun = async () => {
     setLoading(true);
     setAiHint(null);
@@ -54,14 +62,7 @@ int main() {
       setAiHint(res.data.aiHint || null);
 
       if (res.data.allPassed) {
-        // ✅ Clear everything before moving to the next question
-        setTimeout(() => {
-          setCode(getStarterTemplate(question));
-          setResults([]);
-          setAllPassed(null);
-          setAiHint(null);
-          onPass();
-        }, 1500);
+        onPass();
       }
     } catch {
       setAiHint("⚠️ Error: Could not connect to evaluator API.");
