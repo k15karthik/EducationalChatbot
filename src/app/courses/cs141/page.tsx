@@ -1,7 +1,10 @@
 "use client";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function CS141Page() {
+  const router = useRouter();
+  
   const lessons = [
     { id: "lesson1", title: "Lesson 1: Variables and Data Types" },
     { id: "lesson2", title: "Lesson 2: Control Structures" },
@@ -42,7 +45,12 @@ export default function CS141Page() {
         <section>
           <h2 className="text-2xl font-semibold mb-4">Assignments</h2>
           <div className="border rounded-xl p-4 bg-gray-50">
-            <p className="text-red-600 font-medium">8:00 AM Coding Test</p>
+            <Link
+              href="/courses/cs141/exam"
+              className="block text-red-600 hover:underline"
+            >
+              8:00 AM Coding Test
+            </Link>
             <Link
               href="/courses/cs141/lesson1"
               className="block text-red-600 hover:underline"
@@ -81,7 +89,10 @@ export default function CS141Page() {
             >
               Practice IDE
             </button>
-            <button className="border rounded-xl py-3 font-medium hover:bg-gray-100">
+            <button 
+              onClick={() => router.push("/courses/cs141/exam")}
+              className="border rounded-xl py-3 font-medium hover:bg-gray-100"
+            >
               Practice Exam
             </button>
             <button
