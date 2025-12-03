@@ -7,8 +7,6 @@ export default function CS141Page() {
   
   const lessons = [
     { id: "lesson1", title: "Lesson 1: Variables and Data Types" },
-    { id: "lesson2", title: "Lesson 2: Control Structures" },
-    { id: "lesson3", title: "Lesson 3: Functions and Scope" },
   ];
 
   return (
@@ -101,7 +99,10 @@ export default function CS141Page() {
             >
               Ask AI
             </button>
-            <button className="border rounded-xl py-3 font-medium hover:bg-gray-100">
+            <button 
+              onClick={() => window.open("https://piazza.com/class/lr12s7wojy73ob#", "_blank")}
+              className="border rounded-xl py-3 font-medium hover:bg-gray-100"
+            >
               Discussion
             </button>
           </div>
